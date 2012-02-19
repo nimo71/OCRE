@@ -2,6 +2,7 @@ package controllers
 
 import play.api._
 import play.api.i18n._
+import play.api.libs._
 import play.api.mvc._
 import play.api.data._
 import play.api.data.Form._
@@ -27,13 +28,13 @@ object Application extends Controller {
     	tuple(
       		"email" -> email,
       		"password" -> text
-    	) verifying (
+    	)
+    	verifying (
     		Messages("invalid.login.credentials"), 
     		result => result match {
-  				case (email, password) => 
-  					!User.findByEmail(email).forall(_.password != password)
-  			}
-  		)
+      			case (email, password) => 
+      				User.findByEmail(email).exists { _.password == Crypto.sign(password) }
+    	})
   	)
   
   	/**
@@ -49,9 +50,18 @@ object Application extends Controller {
     def logIn() = Action { implicit request =>
     	logInForm.bindFromRequest.fold(
       		formWithErrors => BadRequest(html.index(formWithErrors)),
-      		result => result match { 
-      			case (email, password) => Ok(email)}
-      		)
+      		result => 
+      			User.findByEmail(result._1) match {
+      				case Some(u) => 
+      					request.session + ("userId" -> u.id.toString())
+      					Redirect(routes.UserController.profile())
+      						.flashing("message" -> Messages("log.in.successful", u.email))
+      					
+      				case None => 
+      					Redirect(routes.Application.index())
+      						.flashing("message" -> Messages("log.in"))		
+      		}
+  		)
     }  
     
     /** 

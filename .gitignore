@@ -7,3 +7,4 @@ tmp
 .project
 .scala_dependencies
 .settings/
+app/.DS_Store

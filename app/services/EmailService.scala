@@ -1,18 +1,20 @@
 package services
 
+// requires Java Mail API (mail.jar), which must be in classpath
+/*
 import javax.mail._
 import javax.mail.internet._
 import java.util.Properties._
+*/
+import play.api._
 
 case class Email(from: String, to: String, subject: String, content: String);
 
-// requires Java Mail API (mail.jar), which must be in classpath
-
 class EmailService {
-	
-	
-	
+		
 	def sendEmail(email: Email) = {
+		Logger.info("Sending email subject: "+ email.subject +", to: "+ email.to)
+	/*
 		// Set up the mail object
 		val properties = System.getProperties
 		properties.put("mail.smtp.host", "localhost")
@@ -27,5 +29,6 @@ class EmailService {
 
 		// And send it
 		Transport.send(message)
+		*/
 	}
 }

@@ -46,6 +46,10 @@
 		@alert("green-alert", Messages(msg)) 
 	}
 	
+	@request.flash.get("errorMessage").map { msg => 
+		@alert("red-alert", Messages(msg)) 
+	}
+	
 	@if(logInForm.hasErrors || logInForm.hasGlobalErrors) {
 		@alert("red-alert", "Please make corrections...")
 	}

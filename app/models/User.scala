@@ -3,6 +3,7 @@ package models
 import anorm._
 import anorm.SqlParser._
 import play.api.db._
+import play.api.libs._
 import play.api.Play.current
 
 case class User(id: Long, email: String, password: String)
@@ -32,7 +33,7 @@ object User {
 	 */	
 	def create(email: String, password: String) = DB.withConnection { implicit c =>
    		SQL("insert into User (email, password) values ({email}, {password})")
-   			.on(('email -> email), ('password -> password))
+   			.on(('email -> email), ('password -> Crypto.sign(password)))
    			.executeUpdate()
 	}
 }
