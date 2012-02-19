@@ -1,0 +1,23 @@
+@(
+)(
+    implicit 
+    request: play.api.mvc.RequestHeader
+)
+
+@import play.api.i18n._
+@import tags._
+
+@style = {
+<link rel="stylesheet" media="screen" href="assets/stylesheets/form.css">   
+<link rel="stylesheet" media="screen" href="assets/javascripts/jquery-ui-1.8.9.custom/css/custom-theme/jquery-ui-1.8.9.custom.css">  
+<style type="text/css">
+</style>	  
+}
+
+@profile = {
+	@request.flash.get("message").map { msg => 
+		@alert("green-alert", Messages(msg)) 
+	}
+}
+
+@main("Profile", profile, style) 
