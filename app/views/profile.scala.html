@@ -47,6 +47,29 @@
     	text-shadow: #3b3b3b 1px 1px 0px;
     	color: #fff;
 	}
+	#interests {
+		float: left;
+		width: 70%;
+	}
+	#interests ul {
+		float: right;
+		margin-right: 20px;
+		font-size: small;
+	}
+	#bookmarklet {
+		float: right;
+		width: 270px;
+		color: grey;
+	}
+	.interest {
+		float: left; 
+		width: 626px;
+		margin-top: 5px;
+		padding: 7px;
+		border-style: solid;
+		border-color: lightgrey; 
+		border-width: 1px;
+	}
 </style>	  
 }
 
@@ -54,19 +77,29 @@
 	@request.flash.get("message").map { msg => 
 		@alert("green-alert", Messages(msg)) 
 	}
-    <h2>Interested bookmarklet</h2> 
-    <p>Drag this bookmark to your Bookmarks Bar.
-    	Then simply click it when you're on a page that you want to read later.
-    	<div style="text-align: center; margin: 20px 0 20px 0;"> 
-    		<a href="javascript:function ocre(){var d=document,z=d.createElement(&#039;scr&#039;+&#039;ipt&#039;),b=d.body,l=d.location;try{if(!b)throw(0);d.title=&#039;(Saving...) &#039;+d.title;z.setAttribute(&#039;src&#039;,l.protocol+&#039;//localhost:9000/interested/@encodedId?u=&#039;+encodeURIComponent(l.href)+&#039;&amp;t=&#039;+(new Date().getTime()));b.appendChild(z);}catch(e){alert(&#039;Please wait until the page has loaded.&#039;);}}ocre();void(0)"
-    			class="bookmarklet"
-    			onclick="return explain_bookmarklet();"
-    			title="Read Later">Interested</a> 
-        	<span style="vertical-align: 2px;">&larr; <span style="font-size: 11px;">Drag this to your Bookmarks Bar.</span></span>                
-    	</div> 
+	<div id="interests">
+		<ul class="menu"><li><a href="#">Edit</a></li></ul>
+		<span class="interest">Interest 1</span>
+		<span class="interest">Interest 2</span>
+		<span class="interest">Interest 3</span>
+		<span class="interest">Interest 4</span>
+		<span class="interest">Interest 5</span>		
+	</div>
+	<div id="bookmarklet">
+    	<h2>Interested bookmarklet</h2> 
+    	<p>Drag this bookmark to your Bookmarks Bar.
+    		Then simply click it when you're on a page that you want to read later.
+    		<div style="text-align: center; margin: 20px 0 20px 0;"> 
+    			<a href="javascript:function ocre(){var d=document,z=d.createElement(&#039;scr&#039;+&#039;ipt&#039;),b=d.body,l=d.location;try{if(!b)throw(0);d.title=&#039;(Saving...) &#039;+d.title;z.setAttribute(&#039;src&#039;,l.protocol+&#039;//localhost:9000/interested/@encodedId?u=&#039;+encodeURIComponent(l.href)+&#039;&amp;t=&#039;+(new Date().getTime()));b.appendChild(z);}catch(e){alert(&#039;Please wait until the page has loaded.&#039;);}}ocre();void(0)"
+    				class="bookmarklet"
+    				onclick="return explain_bookmarklet();"
+    				title="Read Later">Interested</a> 
+        		<span style="vertical-align: 2px;">&larr; <span style="font-size: 11px;">Drag this to your Bookmarks Bar.</span></span>                
+    		</div> 
         
-    	A "Saved!" message will briefly appear in the corner of the page.
-    </p>  
+    		A "Saved!" message will briefly appear in the corner of the page.
+    	</p>  
+    </div>
 }
 
 @main("Profile", profile, style) 
