@@ -13,7 +13,7 @@
 
 @register = {
 
-<form class="tlu-form" action="@routes.Application.register" method="POST">
+<form class="tlu-form" action="@routes.RegistrationController.register" method="POST">
 	@if(registrationForm.hasErrors || registrationForm.hasGlobalErrors) {
 		@alert("red-alert", "Please make corrections...")
 	}
