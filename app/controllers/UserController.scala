@@ -10,6 +10,7 @@ object UserController extends Controller {
   	
   	def profile() = Action { implicit request => 
   		Logger.info(request.session.toString)
-  		Ok(html.profile(Crypto.sign(request.session("userId"))))
+  		val userId = request.session("userId")
+  		Ok(html.profile(Crypto.sign(userId)))
   	}
 }

@@ -47,6 +47,27 @@
     	text-shadow: #3b3b3b 1px 1px 0px;
     	color: #fff;
 	}
+	#documents {
+		float: left; 
+		width: 70%;
+		margin-bottom: 2em;
+	}
+	#documents ul {
+		float: right;
+		margin-right: 20px;
+		font-size: small;
+	}
+	.document {
+		float: left;
+		width: 626px;
+		height: 1.5em;
+		margin-top: 5px;
+		padding-left: 1em;
+		border-style: solid;
+		border-color: lightgrey; 
+		border-width: 1px;
+		line-height: 1.5em;
+	}
 	#interests {
 		float: left;
 		width: 70%;
@@ -62,13 +83,51 @@
 		color: grey;
 	}
 	.interest {
-		float: left; 
+		float: left;
 		width: 626px;
+		height: 1.5em;
 		margin-top: 5px;
-		padding: 7px;
 		border-style: solid;
 		border-color: lightgrey; 
 		border-width: 1px;
+		line-height: 1.5em;
+	}
+	.interest input {
+		width: 75%;
+		margin: 0;
+		border: none;
+	}
+	.menu {
+		float: right;
+	}
+	.button {
+		float: right;
+		padding-left: 1em;
+		padding-right: 1em;
+		line-height: 1.5em;
+	}
+	.ok {
+	    color: white;
+		background: #663333;
+	    border-top: grey; 
+	    border-left: grey;
+	    border-bottom: black;
+	    border-right: black;
+		border-style: solid;
+		border-width: 1px;
+	}
+	.cancel {
+		border-color: #663333;
+		border-style: solid;
+		border-width: 1px;
+	}
+	#save {
+		margin-top: 1em;
+		margin-right: 2em;
+	}
+	#cancel {
+		margin-top: 1em;
+		margin-right: 1em;
 	}
 </style>	  
 }
@@ -77,29 +136,149 @@
 	@request.flash.get("message").map { msg => 
 		@alert("green-alert", Messages(msg)) 
 	}
+	<div id="documents">
+		<h2>Documents</h2><br/>
+		<span class="document">
+			<a href="#">Document 1</a>
+			<ul class="menu">
+				<li><a href="#">Add to Interest</a></li>
+				<li><a href="#">Delete</a></li>
+			</ul>
+		</span>
+	</div>
 	<div id="interests">
-		<ul class="menu"><li><a href="#">Edit</a></li></ul>
-		<span class="interest">Interest 1</span>
-		<span class="interest">Interest 2</span>
-		<span class="interest">Interest 3</span>
-		<span class="interest">Interest 4</span>
-		<span class="interest">Interest 5</span>		
+		<h2>Interests</h2>
+		<ul class="menu">
+			<li><a id="edit" href="#">Edit</a></li>
+			<li><a id="new" href="#">New</a></li>
+		</ul>
+		<span class="interest readable">Interest 1</span>
+		<span class="interest readable">Interest 2</span>
+		<span class="interest readable">Interest 3</span>
+		<span class="interest readable">Interest 4</span>
+		<span class="interest readable">Interest 5</span>		
+		<a id="save" class="ok button" href="@routes.InterestController.saveInterests">Save</a>	
+		<a id="cancel" class="cancel button" href="#">Cancel</a>
 	</div>
 	<div id="bookmarklet">
-    	<h2>Interested bookmarklet</h2> 
+    	<h2>Bookmark Your Interests</h2><br/> 
     	<p>Drag this bookmark to your Bookmarks Bar.
-    		Then simply click it when you're on a page that you want to read later.
-    		<div style="text-align: center; margin: 20px 0 20px 0;"> 
-    			<a href="javascript:function ocre(){var d=document,z=d.createElement(&#039;scr&#039;+&#039;ipt&#039;),b=d.body,l=d.location;try{if(!b)throw(0);d.title=&#039;(Saving...) &#039;+d.title;z.setAttribute(&#039;src&#039;,l.protocol+&#039;//localhost:9000/interested/@encodedId?u=&#039;+encodeURIComponent(l.href)+&#039;&amp;t=&#039;+(new Date().getTime()));b.appendChild(z);}catch(e){alert(&#039;Please wait until the page has loaded.&#039;);}}ocre();void(0)"
-    				class="bookmarklet"
-    				onclick="return explain_bookmarklet();"
-    				title="Read Later">Interested</a> 
-        		<span style="vertical-align: 2px;">&larr; <span style="font-size: 11px;">Drag this to your Bookmarks Bar.</span></span>                
-    		</div> 
-        
-    		A "Saved!" message will briefly appear in the corner of the page.
-    	</p>  
+    	</p>
+    	<div style="text-align: center; margin: 20px 0 20px 0;"> 
+    		<a href="javascript:function ocre(){var d=document,z=d.createElement(&#039;scr&#039;+&#039;ipt&#039;),b=d.body,l=d.location;try{if(!b)throw(0);d.title=&#039;(Saving...) &#039;+d.title;z.setAttribute(&#039;src&#039;,l.protocol+&#039;//localhost:9000/interested/@encodedId?u=&#039;+encodeURIComponent(l.href)+&#039;&amp;t=&#039;+(new Date().getTime()));b.appendChild(z);}catch(e){alert(&#039;Please wait until the page has loaded.&#039;);}}ocre();void(0)"
+				class="bookmarklet"
+    			onclick="return explain_bookmarklet();"
+    			title="Read Later">Interested</a> 
+        	<span style="vertical-align: 2px;">&larr; <span style="font-size: 11px;">Drag this to your Bookmarks Bar.</span></span>                
+    	</div> 
+        <p>When you're browsing a page you want to add to your interests then click the 
+    	bookmark.
+    	</p>
+    	<p>A "Saved!" message will briefly appear in the corner of the page.</p>  
     </div>
 }
 
 @main("Profile", profile, style) 
+
+<div id="toClone">
+	<span id="editableInterest" class="interest editable">
+		<input type="text"></input>
+		<ul class='menu'>
+			<li><a class="delete" href="#">Delete</a></li>
+		</ul>
+	</span>
+	<span id="readOnlyInterest" class="interest readable"></span>
+</div>
+
+<script type="text/javascript">
+
+	function storeAndRemoveClones() {
+		window.editableInterest = $('#editableInterest');
+		$(window.editableInterest).removeAttr('id');
+		
+		window.readOnlyInterest = $('#readOnlyInterest');
+		$(window.readOnlyInterest).removeAttr('id');
+		
+		$('#toClone').remove();
+	}
+	
+	function initialiseMenu() {
+		$('#new').hide();
+		$('#save').hide();
+		$('#cancel').hide();
+	}
+	
+	function createEditableInterest() {
+		var c = $(window.editableInterest).clone();
+		
+		$(c).find('.delete').click(function(e) {
+			var target = e.target;
+			var interest = $(target).parents('.interest');
+			$(interest).remove();		
+		});
+		return c;
+	}
+	
+	function setUpEventHandlers() {
+	
+		$('#edit').click(function() {
+			$('.readable').each(function(i, readable) {
+				var text = $(readable).text();
+				var clone = createEditableInterest();
+				var input = $(clone).children('input:text');
+				$(input).val(text);
+				$(readable).replaceWith(clone);
+				$(clone).click(function () {
+					$(input).focus();
+				});
+			});
+			$('#edit').hide();
+			$('#new').show();
+			$('#save').show();
+			$('#cancel').show();
+		});
+		
+		$('#cancel').click(function() {
+			$('.editable').each(function(i, editable) {
+				var input = $(editable).children('input:text');
+				var text = $(input).val();
+				var clone = $(window.readOnlyInterest).clone();
+				$(clone).text(text);
+				$(editable).replaceWith(clone);
+			});
+			$('#edit').show();
+			$('#new').hide();
+			$('#save').hide();
+			$('#cancel').hide();
+		});
+		
+		$('#new').click(function() {
+			var clone = createEditableInterest();
+			$('#interests').append(clone);
+		});
+		
+		$('#save').click(function() {
+			$('.editable').each(function(i, editable) {
+				var input = $(editable).children('input:text');
+				var text = $(input).val();
+				var clone = $(window.readOnlyInterest).clone();
+				$(clone).text(text);
+				$(editable).replaceWith(clone);
+			});
+			
+			// build json and send to the server
+			$('.interest').each(function (i, interest) {
+				
+			});
+		});
+	}
+	
+	storeAndRemoveClones();
+	initialiseMenu();
+	setUpEventHandlers();
+	
+	// create javascript objects for: 
+	// - interest
+	// - interest list
+	
+</script>

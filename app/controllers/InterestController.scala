@@ -10,4 +10,9 @@ object InterestController extends Controller {
   		Logger.info("Interested, id="+ id +", url="+ request.queryString("u")(0))
   		Ok(Json.toJson(Map("result"->"Ok")))
   	}
+  	
+  	def saveInterests() = Action { implicit request =>
+  		Logger.info("saveInterests()")
+  		Ok("saveInterests()")
+  	}
 }
