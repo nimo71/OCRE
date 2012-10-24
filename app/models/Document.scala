@@ -5,14 +5,14 @@ import anorm.SqlParser._
 import play.api.db._
 import play.api.Play.current
 
-class Document(id: Long, url: String)
+case class Document(id: Long, url: String)
 
 object Document {
 	
 	val document = {
-		get[Long]("id") ~ 
+		get[Long]("documentId") ~ 
   		get[String]("url") map {
-    		case id~url => Document(id, url)
+    		case documentId~url => Document(documentId, url)
   		}
 	}
 	
@@ -22,18 +22,8 @@ object Document {
 	def create(url: String) = DB.withConnection { implicit c =>
    		SQL("insert into Document (url) values ({url})")
    			.on(('url -> url))
-   			.executeUpdate()
+   			.executeUpdate
 	}
-	
-	/**
-		Associate a document with a user
-	*/
-	def addDocumentToUser(documentId: Long, userId: Long) = 
-		DB.withConnection { implicit c => 
-			SQL("insert into UserDocument (userId, documentId) values ({userId, documentId})")
-				.on(('userId -> userId), ('documentId -> documentId))
-				.executeUpdate()
-		}
 	
 	/**
 		Retrieve a document by its url.
@@ -43,5 +33,37 @@ object Document {
 			.on('url -> url)
 			.as(document *)
 			.headOption
+	}
+	
+	/**
+		Retrieve all the documents in the user profile 
+	 */
+	def findUserDocuments(userId: Long): List[Document] = DB.withConnection { 
+		implicit c => 
+		SQL("""
+			select d.* 
+			from Document d 
+			join UserDocument ud ON d.documentId = ud.documentId 
+			where ud.userId = {userId}
+			""")
+		.on('userId -> userId) 
+		.as(document *)
+	}
+	
+	/**
+		Retrieve all the documents in the user profile 
+	 */
+	def findUserDocument(userId: Long, documentId: Long): Option[Document] = DB.withConnection { 
+		implicit c => 
+		SQL("""
+			select d.* 
+			from Document d 
+			join UserDocument ud ON d.documentId = ud.documentId 
+			where ud.userId = {userId}
+		    and ud.documentId = {documentId}
+			""")
+		.on(('userId -> userId), ('documentId -> documentId)) 
+		.as(document *)
+		.headOption
 	}
 }

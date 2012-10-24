@@ -4,9 +4,9 @@
 
 CREATE SEQUENCE document_id_seq;
 CREATE TABLE Document (
-    id bigint(20) NOT NULL DEFAULT nextval('document_id_seq'),
+    documentId bigint(20) NOT NULL DEFAULT nextval('document_id_seq'),
     url varchar(1000),
-    primary key (id)
+    primary key (documentId)
 );
  
 # --- !Downs

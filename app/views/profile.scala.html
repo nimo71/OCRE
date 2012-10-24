@@ -1,5 +1,6 @@
 @( 
-	encodedId : String
+	encodedId: String,
+	documents: List[models.Document]
 )(
     implicit 
     request: play.api.mvc.RequestHeader
@@ -138,13 +139,16 @@
 	}
 	<div id="documents">
 		<h2>Documents</h2><br/>
+		@documents.foreach { d =>
 		<span class="document">
-			<a href="#">Document 1</a>
+			<a href="@d.url">@d.url</a>
 			<ul class="menu">
 				<li><a href="#">Add to Interest</a></li>
 				<li><a href="#">Delete</a></li>
 			</ul>
 		</span>
+		}
+		
 	</div>
 	<div id="interests">
 		<h2>Interests</h2>

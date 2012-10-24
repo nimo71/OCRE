@@ -7,10 +7,13 @@ import play.api.mvc._
 object UserController extends Controller {
   
   	import views._
+  	import models._
+  	import services.Cypher
   	
   	def profile() = Action { implicit request => 
   		Logger.info(request.session.toString)
   		val userId = request.session("userId")
-  		Ok(html.profile(Crypto.sign(userId)))
+  		val documents = Document.findUserDocuments(userId.toLong)
+  		Ok(html.profile(Cypher.encode(userId), documents))
   	}
 }

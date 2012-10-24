@@ -11,10 +11,10 @@ case class User(id: Long, email: String, password: String)
 object User {
 
 	val user = {
-  		get[Long]("id") ~ 
+  		get[Long]("userId") ~ 
   		get[String]("email") ~
   		get[String]("password") map {
-    		case id~email~password => User(id, email, password)
+    		case userId~email~password => User(userId, email, password)
   		}
 	}
 
@@ -36,4 +36,15 @@ object User {
    			.on(('email -> email), ('password -> Crypto.sign(password)))
    			.executeUpdate()
 	}
+	
+	/**
+		Associate a document with a user
+	*/
+	def addDocumentToUser(userId: Long, documentId: Long) = 
+		DB.withConnection { implicit c => 
+			SQL("insert into UserDocument (userId, documentId) values ({userId}, {documentId})")
+				.on(('userId -> userId), ('documentId -> documentId))
+				.executeUpdate
+		}
+	
 }
